@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Chat Me</string>
+    <string name="key_userId">key_userId</string>
+    <string name="Def_value_userId">NAME</string>
+</resources>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background1"
+    tools:context=".Authentication.AuthenticationActivity">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Chatme"
+        android:layout_gravity="center_horizontal"
+        android:textSize="35sp"
+        android:layout_marginTop="35dp"
+        />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:background="@drawable/welcome_shape"
+            android:id="@+id/LayoutSignin"
+            android:elevation="5dp"
+            android:orientation="vertical">
+           <Space
+               android:layout_width="300dp"
+               android:layout_gravity="center_horizontal"
+               android:layout_height="25dp"/>
+            <EditText
+                android:id="@+id/logid"
+                android:layout_width="match_parent"
+                android:maxLines="1"
+                android:hint="Email"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:paddingStart="16dp"
+                android:textColorHint="#000"
+                android:layout_margin="16dp"
+                android:drawableStart="@drawable/user_login_icon"
+                />
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:drawableStart="@drawable/lock_icon"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:paddingStart="16dp"
+                android:textColorHint="#000" />
+
+            <Button
+                android:layout_width="150dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center_horizontal"
+                android:text="LogIN"
+                android:textSize="30sp"
+                android:id="@+id/logbutton"
+                android:layout_marginTop="20dp"
+                android:outlineAmbientShadowColor="#FF5722"
+                android:elevation="5dp"
+                />
+            <LinearLayout
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:orientation="horizontal"
+                android:paddingStart="32dp"
+                android:paddingEnd="32dp"
+                >
+                <Button
+                    android:layout_width="1dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/forgot"
+                    android:text="Forgot Password" />
+                <Button
+                    android:layout_width="1dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/create"
+                    android:text="Create new id" />
+
+            </LinearLayout>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="25dp"/>
+        </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:visibility="invisible" />
+</FrameLayout>

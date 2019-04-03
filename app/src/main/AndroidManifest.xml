@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.anasamin.chatme">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".Activities.NewsFeed"></activity>
+        <activity android:name=".Activities.NotificationActivity" />
+        <activity android:name=".Activities.AllUsersActivity" />
+        <activity android:name=".Activities.ProfileActivity" />
+        <activity android:name=".Activities.Main2Activity" />
+        <activity android:name=".Authentication.CreateuserActivity" />
+        <activity android:name=".Authentication.AuthenticationActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".TestingActivity" />
+        <activity android:name=".Activities.MessageActivity" />
+
+        <service
+            android:name=".Services.MessageIntentService"
+            android:exported="false" />
+        <service
+            android:name=".Services.FirebaseIntentService"
+            android:exported="false" />
+    </application>
+
+</manifest>
