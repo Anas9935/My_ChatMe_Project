@@ -6,51 +6,81 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".Activities.Main2Activity">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/main-toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:popupTheme="@style/Theme.AppCompat.Light"
+        android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+        >
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    >
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/testMain"
+        android:text="TOKENS  "
+        android:textSize="20sp"
         />
+    <TextView
+        android:id="@+id/main_token"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        />
+    <View
+        android:layout_width="10dp"
+        android:layout_height="match_parent"/>
+    <TextView
+        android:id="@+id/main_token_add"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+"
+        />
+</LinearLayout>
+
+    </android.support.v7.widget.Toolbar>
+    <android.support.design.widget.TabLayout
+        android:id="@+id/main_tablayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFC107"
+        app:tabSelectedTextColor="#fff"
+        app:tabTextColor="#000"
+        app:tabIndicatorColor="#fff"
+        >
+        <android.support.design.widget.TabItem
+            android:id="@+id/main_item_chats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chats"
+            />
+        <android.support.design.widget.TabItem
+            android:id="@+id/main_item_news"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="News Feed"
+            />
+    </android.support.design.widget.TabLayout>
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            >
-            <ListView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/lview"
-                tools:listitem="@layout/main_todo"
-                >
+    <android.support.v4.view.ViewPager
+        android:id="@+id/main_viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-            </ListView>
-        </LinearLayout>
-        <ProgressBar
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:id="@+id/progress_main"
-            />
+    </android.support.v4.view.ViewPager>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="100dp"
-            android:text="Notification"
-            android:id="@+id/notification"
-            android:onClick="notifyMe"
-            />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="50dp"
-            android:text="Stop"
-            android:id="@+id/notificationCancel"
-            android:onClick="cancel"
+            android:text="Testing"
+            android:id="@+id/main_testing_btn"
             />
     </FrameLayout>
 </LinearLayout>

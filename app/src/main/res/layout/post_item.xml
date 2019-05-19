@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         >
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:id="@+id/post_user_img"
@@ -158,7 +158,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         >
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/avatar_male"

@@ -12,19 +12,23 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.anasamin.chatme.Objects.NotifObjectForList;
 import com.example.anasamin.chatme.Objects.NotificationObjects;
+import com.example.anasamin.chatme.Objects.userWithGender;
 import com.example.anasamin.chatme.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
-public class NotifAdapter extends ArrayAdapter<NotificationObjects> {
+public class NotifAdapter extends ArrayAdapter<NotifObjectForList> {
     ValueEventListener listener;
-    ArrayList<NotificationObjects> list;
-    public NotifAdapter(Context context, ArrayList<NotificationObjects> objects) {
+    ArrayList<NotifObjectForList> list;
+    public NotifAdapter(Context context, ArrayList<NotifObjectForList> objects) {
         super(context, 0,objects);
         list=objects;
     }
@@ -35,7 +39,7 @@ public class NotifAdapter extends ArrayAdapter<NotificationObjects> {
        if(view==null){
            view= LayoutInflater.from(parent.getContext()).inflate(R.layout.notif_item,parent,false);
        }
-       NotificationObjects current=list.get(position);
+       NotificationObjects current=list.get(position).getObj();
         final ImageView profile,icon;
         final TextView name,message,time;
         LinearLayout layout=view.findViewById(R.id.notif_bkgrnd);
@@ -46,15 +50,18 @@ public class NotifAdapter extends ArrayAdapter<NotificationObjects> {
         message=view.findViewById(R.id.notif_message);
         time=view.findViewById(R.id.notif_time);
         id=current.getMessage();
-        Log.e("list-",""+list.size());
+        int gen=getGender(id);
         switch (current.getType()){
-            case 0://name.setText(current.getMessage());
-                   // message.setText(" Wants To Be Your Friend");
-                    icon.setImageResource(R.drawable.add_frnd);
+            case 0: icon.setImageResource(R.drawable.add_frnd);
                 break;              //FirendRequest
+            case 1://image Liked
+                message.setText(" Liked Your Profile Picture");
+                break;
         }
         if(current.getViewed()==0){
             layout.setBackgroundResource(R.color.colorAccent);
+        }else{
+            layout.setBackgroundResource(R.color.colorPrimary);
         }
         if(listener==null){
             listener=new ValueEventListener() {
@@ -85,10 +92,30 @@ public class NotifAdapter extends ArrayAdapter<NotificationObjects> {
 
                 }
             };
-            FirebaseDatabase.getInstance().getReference("userProfile").child(id).addValueEventListener(listener);
+            FirebaseDatabase.getInstance().getReference("userProfile").child(String.valueOf(gen)).child(id).addValueEventListener(listener);
         }
-        time.setText(String.valueOf(current.getTime()));
-
+        listener=null;
+        time.setText(gettime(current.getTime()));
        return view;
+    }
+    private int getGender(String id){
+        final int[] gender = {0};
+        FirebaseDatabase.getInstance().getReference("userGender").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                userWithGender obj=dataSnapshot.getValue(userWithGender.class);
+                gender[0] =obj.getGender();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        return gender[0];
+    }
+    private String gettime(Long timestamp){
+        SimpleDateFormat formatter =new SimpleDateFormat("h:mm a dd MMM");
+        return formatter.format(new Date(timestamp*1000));
     }
 }

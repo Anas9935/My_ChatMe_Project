@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -21,7 +22,10 @@ import com.example.anasamin.chatme.R;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+
+import static android.view.View.GONE;
 
 public class messageAdapter extends ArrayAdapter<messageListObjects> {
     ArrayList<messageListObjects> arrayList;
@@ -44,11 +48,14 @@ public class messageAdapter extends ArrayAdapter<messageListObjects> {
 
         TextView message, from, time;
         ImageView messagePic;
+        ProgressBar bar;
+
         RelativeLayout rl = view.findViewById(R.id.relId);
         message = (TextView) view.findViewById(R.id.messageMain);
         from = (TextView) view.findViewById(R.id.userNameMessage);
         time = (TextView) view.findViewById(R.id.timeMessage);
         messagePic = view.findViewById(R.id.messagePic);
+        bar=view.findViewById(R.id.imgProg);
 
         messageObject messobj = current.getMessages();
         Log.d("TAG---------------", current.getFrom() + "   " + name);
@@ -60,8 +67,6 @@ public class messageAdapter extends ArrayAdapter<messageListObjects> {
             params.removeRule(RelativeLayout.ALIGN_PARENT_END);
             params.addRule(RelativeLayout.ALIGN_PARENT_START, RelativeLayout.TRUE);
 
-            //params1.removeRule(RelativeLayout.ALIGN_PARENT_END);
-            //params1.addRule(RelativeLayout.ALIGN_PARENT_START,RelativeLayout.TRUE);
             params1.removeRule(RelativeLayout.START_OF);
             params1.addRule(RelativeLayout.END_OF, R.id.userNameMessage);
 
@@ -71,8 +76,6 @@ public class messageAdapter extends ArrayAdapter<messageListObjects> {
             params.removeRule(RelativeLayout.ALIGN_PARENT_START);
             params.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE);
 
-            // params1.removeRule(RelativeLayout.ALIGN_PARENT_START);
-            //   params1.addRule(RelativeLayout.ALIGN_PARENT_END,RelativeLayout.TRUE);
             params1.removeRule(RelativeLayout.END_OF);
             params1.addRule(RelativeLayout.START_OF, R.id.userNameMessage);
         }
@@ -80,20 +83,22 @@ public class messageAdapter extends ArrayAdapter<messageListObjects> {
         rl.setLayoutParams(params1);
         RelativeLayout.LayoutParams pars = (RelativeLayout.LayoutParams) time.getLayoutParams();
         if (messobj.getMessage().length() > 100) {
-            message.setVisibility(View.GONE);
+            message.setVisibility(GONE);
             messagePic.setVisibility(View.VISIBLE);
             Glide.with(messagePic.getContext())
                     .load(messobj.getMessage())
                     .into(messagePic);
             pars.removeRule(RelativeLayout.BELOW);
             pars.addRule(RelativeLayout.BELOW, R.id.frame);
+            bar.setVisibility(GONE);
 
         } else {
             message.setVisibility(View.VISIBLE);
-            messagePic.setVisibility(View.GONE);
+            messagePic.setVisibility(GONE);
             message.setText(messobj.getMessage());
             pars.removeRule(RelativeLayout.BELOW);
             pars.addRule(RelativeLayout.BELOW, R.id.messageMain);
+            bar.setVisibility(GONE);
         }
 
         from.setText(current.getFrom());
@@ -103,7 +108,15 @@ public class messageAdapter extends ArrayAdapter<messageListObjects> {
     }
     private String gettime(Long timestamp){
         SimpleDateFormat formatter =new SimpleDateFormat("h:mm a");
-        return formatter.format(new Date(timestamp*1000));
+        String day=new SimpleDateFormat("dd").format(new Date(timestamp*1000));
+        String date= formatter.format(new Date(timestamp*1000));
+        int Presday= Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+        int messday=Integer.parseInt(day);
+        if(Presday==messday){
+            return date;
+        }else{
+            return new SimpleDateFormat("dd/MMM h:mm").format(new Date(timestamp*1000));
+        }
     }
     public void setName(String n){
         name=n;

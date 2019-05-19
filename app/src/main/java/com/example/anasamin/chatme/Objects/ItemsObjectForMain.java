@@ -2,16 +2,17 @@ package com.example.anasamin.chatme.Objects;
 
 public class ItemsObjectForMain {
     private String name;
-    private String lastMessage;
+    private lastMessageFirebaseObject lastMessage;
     private String imgLink;
     private String userId;
+    private int type;
     public ItemsObjectForMain(){
     }
-    public ItemsObjectForMain(String nameArg,String messAgr,String imgLinkArg,String uid){
+    public ItemsObjectForMain(String nameArg,lastMessageFirebaseObject messAgr,String imgLinkArg,String uid){
         name=nameArg;
         lastMessage=messAgr;
         imgLink=imgLinkArg;
-
+        type=0;     //normal        1//randomFriends
         userId=uid;
     }
 
@@ -23,7 +24,15 @@ public class ItemsObjectForMain {
         return imgLink;
     }
 
-    public String getLastMessage() {
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public lastMessageFirebaseObject getLastMessage() {
         return lastMessage;
     }
 
@@ -39,7 +48,7 @@ public class ItemsObjectForMain {
         this.imgLink = imgLink;
     }
 
-    public void setLastMessage(String lastMessage) {
+    public void setLastMessage(lastMessageFirebaseObject lastMessage) {
         this.lastMessage = lastMessage;
     }
 

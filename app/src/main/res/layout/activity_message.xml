@@ -15,19 +15,20 @@
         android:layout_marginTop="16dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="45dp"
         tools:listitem="@layout/message_todo"
         android:dividerHeight="0dp"
         android:divider="@null"
         android:id="@+id/listview_MessageXML"
         android:transcriptMode="alwaysScroll"
         android:stackFromBottom="true"
+        android:layout_above="@id/message_inputLayout"
         >
 
 
     </ListView>
 
    <LinearLayout
+       android:id="@+id/message_inputLayout"
        android:layout_width="match_parent"
        android:orientation="horizontal"
        android:layout_alignParentBottom="true"
@@ -44,6 +45,7 @@
            android:layout_height="wrap_content"
            android:layout_weight="20"
            android:id="@+id/editMessageXML"
+           android:maxLength="99"
            />
        <ImageView
            android:layout_width="0dp"

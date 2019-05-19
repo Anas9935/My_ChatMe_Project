@@ -13,7 +13,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.anasamin.chatme.Activities.NewsFeed;
 import com.example.anasamin.chatme.Objects.postObject;
+import com.example.anasamin.chatme.Objects.postObjectWithReference;
+import com.example.anasamin.chatme.Objects.userWithGender;
 import com.example.anasamin.chatme.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -29,8 +32,8 @@ import java.util.List;
 
 import static android.view.View.GONE;
 
-public class postAdapter extends ArrayAdapter<postObject> {
-    private ArrayList<postObject> list;
+public class postAdapter extends ArrayAdapter<postObjectWithReference> {
+    private ArrayList<postObjectWithReference> list;
 
     boolean isCommentActive=false;
     boolean isLiked=false;
@@ -41,7 +44,8 @@ public class postAdapter extends ArrayAdapter<postObject> {
     private LinearLayout likeBtn,shareBtn;
     private EditText add_comment_ev;
     private FrameLayout fl;
-    public postAdapter(Context context,  ArrayList<postObject> objects) {
+    int hisGender;
+    public postAdapter(Context context,  ArrayList<postObjectWithReference> objects) {
         super(context, 0, objects);
         list=objects;
     }
@@ -52,9 +56,12 @@ public class postAdapter extends ArrayAdapter<postObject> {
         if(view==null){
             view= LayoutInflater.from(getContext()).inflate(R.layout.post_item,parent,false);
         }
-        postObject current=list.get(position);
+        postObjectWithReference obj=list.get(position);
+        postObject current=obj.getObject();
+        DatabaseReference ref=obj.getRef();
         initialiseViews(view);
-        getProfileImages(current);
+        getHisGender(current);
+        //        getProfileImages(current);
         time.setText(gettime(current.getTime()));
         if(current.isHas_image()){
             messagePic.setVisibility(View.VISIBLE);
@@ -74,27 +81,27 @@ public class postAdapter extends ArrayAdapter<postObject> {
             messagePic.setVisibility(GONE);
         }
         no_likes.setText(""+current.getLikes());
-        no_comments.setText(""+current.getComments()+" Comments");
+        no_comments.setText(""+current.getNo_comments()+" Comments");
         no_shares.setText(""+current.getShares()+" Shares");
-        setOnClickListeners(current);
+        setOnClickListeners(current,ref);
         String comment=add_comment_ev.getText().toString();
         send(comment);
-
         return view;
     }
-    private void setOnClickListeners(final postObject objs){
+    private void setOnClickListeners(final postObject objs,final DatabaseReference reference){
         likeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!isLiked){
                 objs.setLikes(objs.getLikes()+1);
-//                FirebaseDatabase.getInstance().getReference("LocalPosts").setValue(objs);
+                reference.setValue(objs);
+
                     isLiked=true;
                     likeTv.setText("Liked");
             }
             else{
                     objs.setLikes(objs.getLikes()-1);
-                    //               FirebaseDatabase.getInstance().getReference("LocalPosts").setValue(objs);
+                    reference.setValue(objs);
                     isLiked=false;
             }
             }
@@ -104,6 +111,7 @@ public class postAdapter extends ArrayAdapter<postObject> {
             public void onClick(View v) {
                 //how to share the same data
                 objs.setShares(objs.getShares()+1);
+                reference.setValue(objs);
             }
         });
         add_comment_tv.setOnClickListener(new View.OnClickListener() {
@@ -119,6 +127,10 @@ public class postAdapter extends ArrayAdapter<postObject> {
             @Override
             public void onClick(View v) {
             //push a comment
+                String st=add_comment_ev.getText().toString();
+                if(!st.equals("")){
+                    //save text in st
+                }
             }
         });
         viewAllComments.setOnClickListener(new View.OnClickListener() {
@@ -140,9 +152,25 @@ public class postAdapter extends ArrayAdapter<postObject> {
     private void send(String comment){
 
     }
+    private void getHisGender(final postObject object){
+        FirebaseDatabase.getInstance().getReference("userGender").child(object.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                userWithGender u=dataSnapshot.getValue(userWithGender.class);
+                hisGender =u.getGender();
+                getProfileImages(object);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
     private void getProfileImages(postObject obj){
+
         DatabaseReference dbref=FirebaseDatabase.getInstance().getReference("userProfile");
-        dbref.child(obj.getUid()).addValueEventListener(new ValueEventListener() {
+        dbref.child(String.valueOf(hisGender)).child(obj.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String url=null;
@@ -169,7 +197,8 @@ public class postAdapter extends ArrayAdapter<postObject> {
 
             }
         });
-        dbref.child(FirebaseAuth.getInstance().getUid()).addValueEventListener(new ValueEventListener() {
+        int gen= NewsFeed.myGender;
+        dbref.child(String.valueOf(gen)).child(FirebaseAuth.getInstance().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String url = null;

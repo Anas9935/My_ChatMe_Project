@@ -6,16 +6,19 @@
     android:orientation="horizontal"
     android:id="@+id/notif_bkgrnd"
     >
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:id="@+id/notif_img"
         android:src="@drawable/avatar_male"
+        android:layout_margin="8dp"
         />
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="16dp"
         >
         <LinearLayout
             android:layout_width="wrap_content"
@@ -30,11 +33,12 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:id="@+id/notif_name"
+            android:textAllCaps="true"
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sends a Friend Request"
+            android:text=" Sends you a Friend Request"
             android:textSize="18sp"
             android:id="@+id/notif_message"
             />

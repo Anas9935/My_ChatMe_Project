@@ -6,20 +6,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".Activities.ProfileActivity">
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_centerHorizontal="true"
-    android:text="UID"
-    android:id="@+id/testTV"
-    />
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="220dp"
-        android:layout_below="@id/testTV"
         android:id="@+id/frameLayout"
         >
-<ImageView
+<de.hdodenhof.circleimageview.CircleImageView
     android:layout_height="200dp"
     android:layout_width="200dp"
     android:layout_gravity="center_horizontal"
@@ -38,7 +30,8 @@
             android:layout_marginEnd="60dp"
             android:scaleType="fitCenter"
             android:background="@android:color/transparent"
-            android:visibility="gone"
+            android:visibility="invisible"
+            android:elevation="5dp"
             />
         <ImageButton
             android:id="@+id/galleryPic"
@@ -48,7 +41,8 @@
             android:layout_gravity="center_horizontal|bottom"
             android:layout_marginStart="60dp"
             android:background="@android:color/transparent"
-            android:visibility="gone"
+            android:visibility="invisible"
+            android:elevation="5dp"
             />
         <ProgressBar
             android:layout_width="wrap_content"
@@ -120,10 +114,15 @@
             android:layout_weight="1"
             />
     </LinearLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/LikelayoutProfile"
+        >
 <LinearLayout
     android:id="@+id/profileEntry"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_below="@id/LikelayoutProfile"
     android:layout_centerHorizontal="true"
@@ -161,14 +160,26 @@
             android:id="@+id/profile_birthday"
             android:layout_gravity="center_horizontal"
             />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/profileTelephone"
-        android:text="9935996582"
-        android:textSize="20dp"
-        android:layout_gravity="center_horizontal"
-        />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Contact No.-"
+                android:textSize="20sp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/profileTelephone"
+                android:text=""
+                android:textSize="20dp"
+            />
+        </LinearLayout>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -178,16 +189,45 @@
         android:layout_gravity="center_horizontal"
         />
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Interests-"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/profile_hashes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:text=""
+            android:textSize="16sp"
+            android:textStyle="italic" />
+    </LinearLayout>
 </LinearLayout>
+    </ScrollView>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/LikelayoutProfile"
+        >
     <LinearLayout
         android:id="@+id/profile_editViews"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_below="@id/LikelayoutProfile"
         android:layout_marginEnd="16dp"
-        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
         android:visibility="gone"
+
         >
         <EditText
             android:id="@+id/profile_edit_name"
@@ -240,7 +280,31 @@
             android:textSize="20sp"
             android:layout_gravity="center_horizontal"
             />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <EditText
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:hint="Interests"
+                android:id="@+id/profile_interests_ev"
+                />
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/ic_send_black_24dp"
+                android:id="@+id/profile_interest_add_btn"
+                />
+        </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:id="@+id/profile_interest_tv"
+            />
     </LinearLayout>
+    </ScrollView>
     <Button
         android:id="@+id/profile_saveBtn"
         android:layout_width="match_parent"

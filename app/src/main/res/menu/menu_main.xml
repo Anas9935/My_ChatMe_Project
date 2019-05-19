@@ -25,4 +25,15 @@
         android:title="News Feed"
         app:showAsAction="collapseActionView"
         />
+    <item
+        android:id="@+id/action_random_user"
+        android:title="Random User"
+        app:showAsAction="collapseActionView"
+        />
+    <item
+        android:id="@+id/action_main_search"
+        android:title="Search"
+        android:icon="@drawable/ic_search_black_24dp"
+        app:showAsAction="always"
+        />
 </menu>

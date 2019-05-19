@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.example.anasamin.chatme.Activities.Main2Activity;
 import com.example.anasamin.chatme.Objects.messageObject;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -14,7 +15,7 @@ import com.google.firebase.database.ValueEventListener;
 public final class PreferenceUtils {
     FirebaseDatabase db;
     DatabaseReference ref;
-    String uid= Main2Activity.uid;
+    String uid= FirebaseAuth.getInstance().getUid();
     String newmess="";
     private ValueEventListener vListener;
 public static String getNewMessage(Context context){

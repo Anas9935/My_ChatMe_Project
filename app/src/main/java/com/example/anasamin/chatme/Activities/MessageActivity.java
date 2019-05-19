@@ -1,11 +1,14 @@
 package com.example.anasamin.chatme.Activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -15,8 +18,10 @@ import android.widget.TextView;
 
 import com.example.anasamin.chatme.Adapters.messageAdapter;
 import com.example.anasamin.chatme.GeneralUtilities.CustomComparator;
+import com.example.anasamin.chatme.Objects.lastMessageFirebaseObject;
 import com.example.anasamin.chatme.Objects.messageListObjects;
 import com.example.anasamin.chatme.Objects.messageObject;
+import com.example.anasamin.chatme.Objects.userWithGender;
 import com.example.anasamin.chatme.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,6 +37,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -50,6 +58,7 @@ public class MessageActivity extends AppCompatActivity {
             String myname,hisname;
             ImageView imv;
             int IMAGE_REQ_CODE=100;
+            int myGender,hisGender;
 
             FirebaseDatabase database;
             DatabaseReference myReference,hisReference,nameReference,name2Reference;
@@ -74,16 +83,17 @@ public class MessageActivity extends AppCompatActivity {
                 toId=intent.getStringExtra("hisUid");
                 userid=intent.getStringExtra("myUid");
 
+                getGenders();
         database=FirebaseDatabase.getInstance();
         myReference=database.getReference("messages").child(userid).child(toId);
         hisReference=database.getReference("messages").child(toId).child(userid);
-        nameReference=database.getReference("userProfile").child(userid);
-        name2Reference=database.getReference("userProfile").child(toId);
+        nameReference=database.getReference("userProfile").child(String.valueOf(myGender)).child(userid);
+        name2Reference=database.getReference("userProfile").child(String.valueOf(hisGender)).child(toId);
         myLastmessage=database.getReference("lastMessage").child(userid).child(toId);
         hisLastMessage=database.getReference("lastMessage").child(toId).child(userid);
 
         storage=FirebaseStorage.getInstance();
-        storeRef=storage.getReference("picMessages").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        storeRef=storage.getReference("picMessages").child(FirebaseAuth.getInstance().getUid());
 
         imv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,34 +116,69 @@ public class MessageActivity extends AppCompatActivity {
                 send();
             }
         });
-        onAttachEventListener();
+        //onAttachEventListener();
     }
+public void  getGenders(){
+                ValueEventListener lis=new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        userWithGender use=dataSnapshot.getValue(userWithGender.class);
+                        if (use.getUid().equals(userid)){
+                            myGender=use.getGender();
+                        }else if(use.getUid().equals(toId)){
+                            hisGender=use.getGender();
+                            onAttachEventListener();
+                        }
+                    }
 
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                };
+                FirebaseDatabase.getInstance().getReference("userGender").child(userid).addListenerForSingleValueEvent(lis);
+                FirebaseDatabase.getInstance().getReference("userGender").child(toId).addListenerForSingleValueEvent(lis);
+}
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==IMAGE_REQ_CODE&&resultCode==RESULT_OK){
             Uri selected_img=data.getData();
-            storeRef.putFile(selected_img).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                @Override
-                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                    if(!task.isSuccessful()){
-                        throw task.getException();
+            String path=data.getData().getLastPathSegment();
+          //  Log.e("this", "onActivityResult: "+path);
+            final InputStream imagestream;
+            final Bitmap imagev;
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            try {
+                imagestream = getContentResolver().openInputStream(selected_img);
+                 imagev= BitmapFactory.decodeStream(imagestream);
+                imagev.compress(Bitmap.CompressFormat.JPEG, 45, baos);
+                byte[] imgData = baos.toByteArray();
+                storeRef.child(path+".jpeg").putBytes(imgData).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                    @Override
+                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                        if(!task.isSuccessful()){
+                            throw task.getException();
+                        }
+                        return storeRef.getDownloadUrl();
                     }
-                    return storeRef.getDownloadUrl();
-                }
-            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    if(task.isSuccessful()){
-                        Uri photoUri=task.getResult();
-                        long time= System.currentTimeMillis()/1000;
-                        messageObject obj=new messageObject(photoUri.toString(),toId,time);
-                        //push it indatabase
-                        myReference.push().setValue(obj);
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        if(task.isSuccessful()){
+                            Uri photoUri=task.getResult();
+                            long time= System.currentTimeMillis()/1000;
+                            messageObject obj=new messageObject(photoUri.toString(),toId,time);
+                            //push it indatabase
+                            myReference.push().setValue(obj);
+                        }
                     }
-                }
-            });
+                });
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+
         }
     }
 
@@ -144,8 +189,9 @@ public class MessageActivity extends AppCompatActivity {
             long time= System.currentTimeMillis()/1000;
             messageObject obj=new messageObject(mess,toId,time);
             myReference.push().setValue(obj);
-            myLastmessage.setValue(mess);
-            hisLastMessage.setValue(mess);
+            lastMessageFirebaseObject object=new lastMessageFirebaseObject(mess,time);
+            myLastmessage.setValue(object);
+            hisLastMessage.setValue(object);
         }
         message.setText("");
     }

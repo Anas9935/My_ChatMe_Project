@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.CameraActivity"
+    android:id="@+id/camera_frame"
+    >
+    <com.camerakit.CameraKitView
+        android:id="@+id/kit_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:camera_facing="back"
+        android:keepScreenOn="true"
+        android:adjustViewBounds="true"
+        app:camera_flash="auto"
+        app:camera_focus="continuous"
+        app:camera_permissions="camera"
+        />
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/camera_click"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:src="@drawable/ic_photo_camera_black_24dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="50dp"
+        android:background="#00BCD4"
+        android:elevation="5dp"
+        />
+
+</FrameLayout>

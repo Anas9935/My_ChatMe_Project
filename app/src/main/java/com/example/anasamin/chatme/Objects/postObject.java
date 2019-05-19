@@ -9,6 +9,7 @@ public class postObject {
     private String UrlImage;
     private int likes;
     private int shares;
+    private int no_comments;
     private boolean has_text;
     private boolean has_image;
     private List<messageObject> comments;
@@ -20,6 +21,7 @@ public class postObject {
         UrlImage=imgUrl;
         likes=0;
         shares=0;
+        no_comments=0;
         has_image=false;
         has_text=false;
     }
@@ -94,5 +96,13 @@ public class postObject {
 
     public void setUrlImage(String urlImage) {
         UrlImage = urlImage;
+    }
+
+    public int getNo_comments() {
+        return no_comments;
+    }
+
+    public void setNo_comments(int no_comments) {
+        this.no_comments = no_comments;
     }
 }

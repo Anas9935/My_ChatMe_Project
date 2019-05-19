@@ -3,20 +3,26 @@ package com.example.anasamin.chatme.Authentication;
 import android.os.Parcelable;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class userId implements Serializable {
     private String name;
     private String bioLine;
     private String Country;
     private Long birthday;
-    private int likes;
+    //private int likes;
+    private List<String> likes;
     private String email;
     private Long tel;
     private int gender;
     private String ProfilePicUrl;
+    private List<String> HashTags;
+    private List<String> friends;
+    private List<String> tempfriends;
+    private int tokens;
     public userId(){
     }
-    public userId(String name,String bio,String lives,Long DOB,int likes,String email,Long tel,int gender,String ProfUrl){
+    public userId(String name,String bio,String lives,Long DOB,String email,Long tel,int gender,String ProfUrl){
         this.name=name;
         this.email=email;
         this.gender=gender;
@@ -25,10 +31,30 @@ public class userId implements Serializable {
         this.bioLine=bio;
         this.Country=lives;
         this.birthday=DOB;
-        this.likes=likes;
+       // this.likes=likes;
+        HashTags=null;
+        friends=null;
+        tempfriends=null;
+        tokens=5;
     }
 
-    public int getLikes() {
+    public int getTokens() {
+        return tokens;
+    }
+
+    public void setTokens(int tokens) {
+        this.tokens = tokens;
+    }
+
+    public List<String> getTempfriends() {
+        return tempfriends;
+    }
+
+    public void setTempfriends(List<String> tempfriends) {
+        this.tempfriends = tempfriends;
+    }
+
+    public List<String> getLikes() {
         return likes;
     }
 
@@ -56,8 +82,24 @@ public class userId implements Serializable {
         Country = country;
     }
 
-    public void setLikes(int likes) {
+    public void setLikes(List<String> likes) {
         this.likes = likes;
+    }
+
+    public void setHashTags(List<String> hashTags) {
+        HashTags = hashTags;
+    }
+
+    public List<String> getHashTags() {
+        return HashTags;
+    }
+
+    public List<String> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(List<String> friends) {
+        this.friends = friends;
     }
 
     public String getName() {

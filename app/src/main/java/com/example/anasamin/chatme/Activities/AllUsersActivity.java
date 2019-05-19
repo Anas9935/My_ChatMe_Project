@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import com.example.anasamin.chatme.Adapters.mainAdapter;
 import com.example.anasamin.chatme.Authentication.userId;
 import com.example.anasamin.chatme.Objects.ItemsObjectForMain;
+import com.example.anasamin.chatme.Objects.lastMessageFirebaseObject;
 import com.example.anasamin.chatme.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -45,7 +46,7 @@ ValueEventListener valueListener;
         db=FirebaseDatabase.getInstance();
         refprofiles=db.getReference("userProfile");
         list=new ArrayList<>();
-        adapter=new mainAdapter(this,list);
+        adapter=new mainAdapter(this,list,0);
         lv.setAdapter(adapter);
 
         populateView();
@@ -53,8 +54,8 @@ ValueEventListener valueListener;
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ItemsObjectForMain obj=list.get(position);
-                Intent intent=new Intent(AllUsersActivity.this,ProfileActivity.class);
-                intent.putExtra("myId",obj.getUserId());
+                Intent intent=new Intent(AllUsersActivity.this,OtherProfileActivity.class);
+                intent.putExtra("hisUid",obj.getUserId());
                 startActivity(intent);
             }
         });
@@ -66,7 +67,8 @@ ValueEventListener valueListener;
                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                     if(!dataSnapshot.getKey().equals(FirebaseAuth.getInstance().getUid())){
                         userId user=dataSnapshot.getValue(userId.class);
-                        ItemsObjectForMain obj=new ItemsObjectForMain(user.getName(),null,user.getProfilePicUrl(),dataSnapshot.getKey());
+                        lastMessageFirebaseObject object=new lastMessageFirebaseObject(user.getBioLine(),0);
+                        ItemsObjectForMain obj=new ItemsObjectForMain(user.getName(),object,user.getProfilePicUrl(),dataSnapshot.getKey());
                         adapter.add(obj);
                     }
                 }
@@ -91,7 +93,8 @@ ValueEventListener valueListener;
 
                 }
             };
-            refprofiles.addChildEventListener(listener);
+            refprofiles.child("1").addChildEventListener(listener);
+            refprofiles.child("2").addChildEventListener(listener);
         }
         if(valueListener==null){
             valueListener=new ValueEventListener() {

@@ -9,4 +9,20 @@ public class postObjectWithReference {
         object=obj;
         ref=reference;
     }
+
+    public void setObject(postObject object) {
+        this.object = object;
+    }
+
+    public void setRef(DatabaseReference ref) {
+        this.ref = ref;
+    }
+
+    public DatabaseReference getRef() {
+        return ref;
+    }
+
+    public postObject getObject() {
+        return object;
+    }
 }

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.anasamin.chatme.Activities.Main2Activity;
+import com.example.anasamin.chatme.Activities.MainActivity;
 import com.example.anasamin.chatme.GeneralUtilities.resetPasswordDialogFragment;
 import com.example.anasamin.chatme.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -35,6 +37,8 @@ resetPasswordDialogFragment dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_authentication);
         layout=findViewById(R.id.LayoutSignin);
         loginId=(EditText)findViewById(R.id.logid);
@@ -53,7 +57,7 @@ resetPasswordDialogFragment dialog;
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if(mAuth.getCurrentUser()!=null){
                     String path=mAuth.getCurrentUser().getUid();
-                    Intent intent=new Intent(AuthenticationActivity.this, Main2Activity.class);
+                    Intent intent=new Intent(AuthenticationActivity.this, MainActivity.class);
                     intent.putExtra("uid",path);
                     startActivity(intent);
                 }
@@ -90,7 +94,7 @@ resetPasswordDialogFragment dialog;
 
         if(mAuth.getCurrentUser()!=null){
             String path=mAuth.getCurrentUser().getUid();
-            Intent intent=new Intent(AuthenticationActivity.this,Main2Activity.class);
+            Intent intent=new Intent(AuthenticationActivity.this,MainActivity.class);
           //  intent.putExtra("myProfile",id);
             intent.putExtra("uid",path);
             startActivity(intent);

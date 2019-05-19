@@ -3,6 +3,7 @@ package com.example.anasamin.chatme.Authentication;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,12 +13,16 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.anasamin.chatme.Objects.userWithGender;
 import com.example.anasamin.chatme.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class CreateuserActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 EditText name,pass,confPass,email,phone;
@@ -49,12 +54,10 @@ FirebaseAuth.AuthStateListener mlistener;
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         switch (position){
-            case 0:{ gender=1;
+            case 0:{ gender=1;      //Male
             break;}
-            case 1: {gender=2;
+            case 1: {gender=2;      //Female
                 break;}
-            case 3: {gender=0;
-                    break;}
         }
     }
 
@@ -76,9 +79,9 @@ FirebaseAuth.AuthStateListener mlistener;
             public void onComplete(@NonNull Task<AuthResult> task) {
                 //adding the user details
                 if(task.isSuccessful()){
-                    userId newuser=new userId(name.getText().toString(),null,null,null,0
+                    userId newuser=new userId(name.getText().toString(),null,null,null
                     ,email.getText().toString(),Long.valueOf(phone.getText().toString()),gender,null);
-                    FirebaseDatabase.getInstance().getReference("userProfile")
+                    FirebaseDatabase.getInstance().getReference("userProfile").child(String.valueOf(gender))
                             .child(mAuth.getCurrentUser().getUid())
                             .setValue(newuser).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -91,9 +94,25 @@ FirebaseAuth.AuthStateListener mlistener;
                             }
                         }
                     });
+                    userWithGender u=new userWithGender(mAuth.getUid(),gender);
+
+                    FirebaseDatabase.getInstance().getReference("userGender").child(mAuth.getCurrentUser().getUid()).push().setValue(u);
+                    FirebaseDatabase.getInstance().getReference("userCount").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            Double users=dataSnapshot.getValue(double.class);
+                            if(users==null){
+                                users=0d;
+                            }
+                            FirebaseDatabase.getInstance().getReference("userCount").setValue(users+1);
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                        }
+                    });
                 }
                 else{
-                    Toast.makeText(CreateuserActivity.this,task.getException().getMessage(),Toast.LENGTH_LONG).show();
+                    Toast.makeText(CreateuserActivity.this,"task isnt successful",Toast.LENGTH_LONG).show();
                 }
             }
         });
